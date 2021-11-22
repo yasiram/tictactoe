@@ -82,7 +82,7 @@ public class GameController {
                     player = playerTwo;
                 }
                 Map<String, Object> resCheck = game.checkBoard();
-                if ((boolean) resCheck.get("win")) {
+                if ((boolean) resCheck.get("win") || (boolean) resCheck.get("tie")) {
                     res = resCheck;
                     res.put("status", "S");
                     res.put("board", game.getBoard());

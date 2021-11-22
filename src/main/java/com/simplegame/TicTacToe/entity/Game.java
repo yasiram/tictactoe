@@ -67,15 +67,18 @@ public class Game {
         boolean diagonalReverse;
         int diagonalCount = 0;
         int diagonalReverseCount = 0;
+        int emptySquareCount = this.grid*this.grid;
         boolean win = false;
+        boolean tie = false;
         String directionWin = "";
         int playerOrder = 0;
         int winLoc = 0;
         res.put("win", win);
+        res.put("tie", tie);
         if(this.moveCount >= this.grid){
             for(int i = 0; i < this.grid; i++){
                 horizontal = true;
-                // vertical = true;
+                vertical = true;
                 for(int j = 0; j < this.grid; j++){
                     //check horizontal
                     if(j > 0 && horizontal){
@@ -92,39 +95,38 @@ public class Game {
                             break;
                         }
                     }
+
+                    if(j > 0 && vertical){
+                        if(this.board[j][i] != this.board[j-1][i] || 
+                        this.board[j][i] == null || this.board[j-1][i] == null){
+                            vertical = false;
+                        }
+                        if(j == (this.grid-1) && vertical && this.board[j][i] == this.board[j-1][i]){
+                            win = true;
+                            directionWin = "vertical";
+                            winLoc = j;
+                            playerOrder = (this.playerSign.indexOf(this.board[0][i])+1);
+                            break;
+                        }
+                    }
+
+                    if(this.board[i][j] != null){
+                        emptySquareCount--;
+                    }
+
+                    if(emptySquareCount == 0 && !win){
+                        tie = true;
+                        break;
+                    }
                     
                 }
 
-                if(win)
+                if(win || tie)
                     break;
                 
             }
 
-            if(!win){
-                for (int i = 0; i < this.grid; i++) {
-                    vertical = true;
-                    for (int j = 0; j < this.grid; j++) {
-                        if(j > 0 && vertical){
-                            if(this.board[j][i] != this.board[j-1][i] || 
-                            this.board[j][i] == null || this.board[j-1][i] == null){
-                                vertical = false;
-                            }
-                            if(j == (this.grid-1) && vertical && this.board[j][i] == this.board[j-1][i]){
-                                win = true;
-                                directionWin = "vertical";
-                                winLoc = j;
-                                playerOrder = (this.playerSign.indexOf(this.board[0][i])+1);
-                                break;
-                            }
-                        }
-                    }
-
-                    if(win)
-                        break;
-                }
-            }
-
-            if(!win){
+            if(!win && !tie){
                 for (int i = 0; i < this.grid; i++) {
                     diagonal = true;
                     diagonalReverse = true;
@@ -166,10 +168,16 @@ public class Game {
                 }
             }
 
-            res.put("win", win);
-            res.put("directionWin", directionWin);
-            res.put("winLoc", winLoc);
-            res.put("playerWin", playerOrder);
+            if(win){
+                res.put("win", win);
+                res.put("statusGame", "win");
+                res.put("directionWin", directionWin);
+                res.put("winLoc", winLoc);
+                res.put("playerWin", playerOrder);
+            } else if(tie) {
+                res.put("tie", tie);
+                res.put("statusGame", "tie");
+            }
         }
         
         return res;

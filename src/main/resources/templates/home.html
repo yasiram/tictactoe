@@ -121,7 +121,13 @@
                                 if(res.hasOwnProperty("win")){
                                     if(res.win){
                                         alert("Player "+res.playerWin+","+(res.playerWin == 1?t.playerOneName:t.playerTwoName)+" Won the game");
-                                        //return false;
+                                        t.board = null
+                                    }
+                                }
+
+                                if(res.hasOwnProperty("tie")){
+                                    if(res.tie){
+                                        alert("It's a tie");
                                         t.board = null
                                     }
                                 }
